@@ -2,67 +2,70 @@
 //  EntryListTableViewController.swift
 //  CloudKitJournal
 //
-//  Created by Zebadiah Watson on 3/26/20.
-//  Copyright © 2020 Zebadiah Watson. All rights reserved.
+//  Created by Andrew Saeyang on 8/9/21.
+//  Copyright © 2021 Andrew Saeyang. All rights reserved.
 //
 
 import UIKit
 
 class EntryListTableViewController: UITableViewController {
-
-    
-    // MARK: - Lifecycle methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        /// call the fetchEntriesWith method on your Entry Controller
-        EntryController.sharedInstance.fetchEntriesWith { (result) in
-            /// call the updateViews method when we have completed with our result
+        
+        EntryController.shared.fetchEntryWith { (result) in
             self.updateViews()
         }
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        /// call the reloadData method on the tableView to reload your rows and sections
-        tableView.reloadData()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        self.updateViews()
     }
     
-    // MARK: - Class Methods
     
-    func updateViews() {
+    // MARK: - HELPER FUNCTIONS
+    func updateViews(){
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
-        return EntryController.sharedInstance.entries.count
+        // #warning Incomplete implementation, return the number of rows
+        return EntryController.shared.entries.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "entryCell", for: indexPath)
         
-        let entry = EntryController.sharedInstance.entries[indexPath.row]
+        let entry = EntryController.shared.entries[indexPath.row]
+        
         cell.textLabel?.text = entry.title
-        cell.detailTextLabel?.text = entry.timeStamp.formatDate()
-
+        cell.detailTextLabel?.text = entry.timestamp.dateAsString()
+        
         return cell
     }
-
-
-    // MARK: - Navigation
     
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toDetailVC" {
+        
+        
+        // Identifier
+        if segue.identifier == "toDetailVC"{
+            // Index Path
+            // Destination
             guard let indexPath = tableView.indexPathForSelectedRow,
-                let destinationVC = segue.destination as? EntryDetailViewController else { return }
+                  let destination = segue.destination as? EntryDetailViewController else { return }
             
-            let entryToSend = EntryController.sharedInstance.entries[indexPath.row]
-            destinationVC.entry = entryToSend
+            // Object to send
+            let entryToSend = EntryController.shared.entries[indexPath.row]
+            
+            // Object to Recieve
+            destination.entry = entryToSend
+            
         }
     }
-
 }

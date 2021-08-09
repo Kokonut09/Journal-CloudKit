@@ -2,96 +2,58 @@
 //  Entry.swift
 //  CloudKitJournal
 //
-//  Created by Zebadiah Watson on 3/26/20.
-//  Copyright © 2020 Zebadiah Watson. All rights reserved.
+//  Created by Andrew Saeyang on 8/9/21.
+//  Copyright © 2021 Andrew Saeyang. All rights reserved.
 //
 
 import Foundation
 import CloudKit
 
-//MARK: - Magic Strings struct
-
-/**
- Creating a struct named EntryConstants containing the String values for keys used when setting the values for a CKRecord.
- */
-
-struct EntryConstants {
-    static let titleKey = "title"
-    static let bodyKey = "body"
-    static let timeStampKey = "timeStamp"
-    static let recordTypeKey = "Entry"
-}
-
-//MARK: - Class Declaration
-
-class Entry {
+struct EntryConstants{
+        static let TitleKey = "title"
+        static let BodyKey = "body"
+        static let TimestampKey = "timestamp"
     
+        static let recordTypeKey = "Entry"
+    }//end of struct
+
+class Entry{
     let title: String
     let body: String
-    let timeStamp: Date
-    let ckRecordID: CKRecord.ID
+    let timestamp: Date
     
-    /**
-     Initializes an Entry object
-     
-     - Parameters:
-     - title: String value for the Entry objects title property
-     - body: String value for the Entry objects body property
-     - timeStamp: Date value for the Entry objects timeStamp property, given a default value of Date() (Date initialized)
-     - ckRecordID: CKRecord.ID for the Entry object, set with a default vaule of UUID().uuidString
-     */
-    
-    init(title: String, body: String, timeStamp: Date = Date(), ckRecordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+    init(title: String, body: String, timestamp: Date = Date()){
         self.title = title
         self.body = body
-        self.timeStamp = timeStamp
-        self.ckRecordID = ckRecordID
+        self.timestamp = timestamp
+        
     }
-} // End of Class
-
-//MARK: - CKRecord Extension
-
-extension CKRecord {
     
-    /**
-    Convenience Initializer to create a CKRecord from an Entry object
-    
-    - Parameters:
-     - entry: The Entry object to set Key/Value pairs to store inside a CKRecord
-    */
-    
-    convenience init(entry: Entry) {
-        self.init(recordType: EntryConstants.recordTypeKey, recordID: entry.ckRecordID)
-        self.setValuesForKeys([
-            EntryConstants.titleKey : entry.title,
-            EntryConstants.bodyKey : entry.body,
-            EntryConstants.timeStampKey : entry.timeStamp
-        ])
-    }
-}// End of Extension
 
-//MARK: - Extension for Convenience Initializer
+    
+}// End of class
 
+//CKRecord -> Entry
 extension Entry {
     
-    /**
-    Failable Convenience Initializer that initializes an Entry object stored in CloudKit
-    
-    - Parameters:
-     - ckRecord: The CKRecord object containinf the Key/Value pairs of the Entry object stored in CloudKit
-    */
-    
     convenience init?(ckRecord: CKRecord) {
-        guard let title = ckRecord[EntryConstants.titleKey] as? String,
-            let body = ckRecord[EntryConstants.bodyKey] as? String,
-            let timeStamp = ckRecord[EntryConstants.timeStampKey] as? Date
-            else { return nil }
+        guard let title = ckRecord[EntryConstants.TitleKey] as? String,
+              let body = ckRecord[EntryConstants.BodyKey] as? String,
+              let timestamp = ckRecord[EntryConstants.TimestampKey] as? Date else { return nil }
         
-        self.init(title: title, body: body, timeStamp: timeStamp)
+        self.init(title: title, body: body, timestamp: timestamp)
     }
-}// End of Extension
+}//end of extension
 
-
-
-
-
+//Entry -> CKRecord
+extension CKRecord {
+    convenience init(entry: Entry) {
+        self.init (recordType: EntryConstants.recordTypeKey)
+        
+        self.setValuesForKeys([
+            EntryConstants.TitleKey : entry.title,
+            EntryConstants.BodyKey : entry.body,
+            EntryConstants.TimestampKey : entry.timestamp
+        ])
+    }
+}//end of extension

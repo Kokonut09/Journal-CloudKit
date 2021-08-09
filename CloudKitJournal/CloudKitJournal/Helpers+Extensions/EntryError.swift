@@ -2,17 +2,23 @@
 //  EntryError.swift
 //  CloudKitJournal
 //
-//  Created by Zebadiah Watson on 3/26/20.
-//  Copyright © 2020 Zebadiah Watson. All rights reserved.
+//  Created by Andrew Saeyang on 8/9/21.
+//  Copyright © 2021 Andrew Saeyang. All rights reserved.
 //
 
 import Foundation
 
-    /**
-    In this helper we are creating an enum to handle errors we get during our network calls
-    */
-
-enum EntryError: LocalizedError {
+enum EntryError: LocalizedError{
+    
     case ckError(Error)
     case couldNotUnwrap
+    
+    var errorDescription: String?{
+        switch self {
+        case .ckError(let error):
+            return error.localizedDescription
+        case .couldNotUnwrap:
+            return "Unable to unwrap this Entry."
+        }
+    }
 }

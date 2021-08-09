@@ -2,23 +2,22 @@
 //  DateExtension.swift
 //  CloudKitJournal
 //
-//  Created by Zebadiah Watson on 3/26/20.
-//  Copyright © 2020 Zebadiah Watson. All rights reserved.
+//  Created by Andrew Saeyang on 8/9/21.
+//  Copyright © 2021 Andrew Saeyang. All rights reserved.
 //
 
 import Foundation
 
 extension Date {
     
-    /**
-    Formats a date into a string using dateStyle.short and timeStyle.short
-    */
-    
-    func formatDate() -> String {
+    func dateAsString() -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         
         return formatter.string(from: self)
+        
     }
 }
+
+
